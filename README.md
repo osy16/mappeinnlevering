@@ -9,7 +9,7 @@ Det som følger er en oversikt over alle innleveringene, med link til repository
   
 ## [ICA02](https://github.com/chinatsu/is105-ica02)
   * [Repository](https://github.com/chinatsu/is105-ica02)
-  * Dokumentasjon
+  * [Dokumentasjon](https://github.com/crippling-depression/mappeinnlevering/blob/master/ICA02.md)
   
 ## [ICA03](https://github.com/crippling-depression/is105-ica03)
   * [Repository](https://github.com/crippling-depression/is105-ica03)
