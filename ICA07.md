@@ -66,9 +66,7 @@ I eksempelene er header-lengden 28 bytes lang, man teller generelt bytes fra net
 
 #### MAC header (Link layer)
 
-Dette er det eneste i denne delen av headeren som utgjør en forskjell mellom pakkene lokalt og over nettverk.
-
-I den lokale pakken kan vi se at både Destination og Source er nullet ut, men området er fremdeles nødvendig for å spesifisere type header etter dette området. Grunnen til at Destination/Source ikke har blitt utelatt helt fra headeren i lokalversjonen er fordi det ikke fins noen offset-data i protokollen som forteller om feltene er borte eller ikke. Altså leses 12 bytes, og så de 2 neste bytes for å vite hvilken type header ligger foran (IPv4).
+I den lokale pakken kan vi se at de 12 første bytes, både MAC Destination og Source, er nullet ut. Grunnen til at Destination/Source ikke har blitt utelatt helt fra headeren (at den starter på Ethernet Type bytes) i lokalversjonen er fordi det ikke fins noen offset-data i protokollen som forteller om feltene er borte eller ikke. Altså leses 12 bytes, og så de 2 neste bytes for å vite hvilken type header ligger foran, i nettverkslaget.
 
 ```
 [14 2d 27 6e 56 d1]  MAC Destination
