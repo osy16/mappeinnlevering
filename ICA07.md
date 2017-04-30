@@ -12,7 +12,7 @@
   * [Analyse av TCP](#analyse-av-tcp)
   * [Størrelse på TCP-pakke](#størrelse-på-tcp-pakke)
   * [Fragmentering](#fragmentering)
-* [UDP vs. TCP](#tcp-vs-udp)
+* [UDP vs. TCP](#udp-vs-tcp)
 
 ## Wireshark
 
