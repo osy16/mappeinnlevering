@@ -14,7 +14,7 @@
   * [Fragmentering](#fragmentering)
 * [UDP vs. TCP](#udp-vs-tcp)
 * [Kryptering](#kryptering)
-  * [TLS/DTLS](#tls-dtls)
+  * [TLS/DTLS](#tlsdtls)
   * [Diffie-Hellman](#diffie-hellman)
 
 ## Wireshark
