@@ -62,9 +62,9 @@ Dette er et eksempel på en UDP-pakke sendt over nettverket.
 
 ### Analyse av UDP
 
-I eksempelene er header-lengden 42 bytes lang. Hele pakken er 70 bytes lang, og dermed utgjør headeren 60% av pakken. Headeren øker ikke i noen grad dersom dataen er lengre, og vil derfor utgjøre en mindre prosent når det er tilfellet.
+I eksempelene er header-lengden 28 bytes lang, man teller generelt bytes fra nettverkslaget og oppover. Hele pakken er 56 bytes lang, og dermed utgjør headeren 50% av pakken. Headeren øker ikke i noen grad dersom dataen er lengre, og vil derfor utgjøre en mindre prosent når det er tilfellet.
 
-#### MAC header (en del av Ethernet Type II frame)
+#### MAC header (Link layer)
 
 Dette er det eneste i denne delen av headeren som utgjør en forskjell mellom pakkene lokalt og over nettverk.
 
@@ -76,7 +76,7 @@ I den lokale pakken kan vi se at både Destination og Source er nullet ut, men o
 [08 00]              Ethernet Type (0x0800 == IPv4, og f.eks. 0x86DD == IPv6)
 ```
 
-#### IPv4 Header
+#### IPv4 Header (Network layer)
 
 ```
 [45]                 0100 (IPv4 versjon 4)
@@ -99,7 +99,7 @@ I den lokale pakken kan vi se at både Destination og Source er nullet ut, men o
 
 I motsetning til MAC headeren, vil IPv4 source/destination være alltid eksplisitt satt på lokal node (til `7f 00 00 01`/127.0.0.1).
 
-#### User Datagram Protocol header
+#### User Datagram Protocol header (Transport layer)
 
 ```
 [cb bd]              Source port (0xcbcd == 52157)
@@ -108,7 +108,7 @@ I motsetning til MAC headeren, vil IPv4 source/destination være alltid eksplisi
 [f9 bc]              Checksum
 ```
 
-#### Data
+#### Data (Application layer)
 
 ```
 [4d c3 b8 74 65 20
@@ -123,7 +123,7 @@ Wikipedia spesifiserer at UDP pakker har en teoretisk størrelse på 65535 bytes
 
 Det som er viktig å forstå her er at dette ikke tar Ethernet 2's MTU (maximum transmission unit) i betraktning, noe som kommer inn i spill når man sender pakker over nettverket. Ethernet 2's MTU spesifiserer at pakkene må brytes opp i biter av maks 1500 bytes. Altså, om dataen i en pakke utgjør at pakken er over 1500 bytes, vil den fragmenteres i flere biter, sånn at den passer inn i MTU. Etter dette vil protokoll-stacken sette sammen fragmentene til den "originale" pakkens data.
 
-Med dette i betraktning, kan man si at den største UDP-pakken man kan sende over uten fragmentering er 1472 bytes (1500 - 8 bytes (UDP header) - 20 bytes (IP header)). MAC-headeren (14 bytes) teller ikke med i Ethernet 2's MTU.
+Med dette i betraktning, kan man si at den største UDP-pakken man kan sende over uten fragmentering er 1472 bytes (1500 - 8 bytes (UDP header) - 20 bytes (IP header)). MAC-headeren (14 bytes) teller som tidligere nevnt ikke med i beregningen for Ethernet 2's MTU.
 
 Dette er spesifikt viktig å vite i situasjoner hvor man vil oppnå høy ytelse, for eksempel dersom dataen man vil sende over er 1473 bytes, vil man sende to pakker; en som er 1514 bytes lang (1472 bytes data + 8 + 20 + 14), og en som er 35 bytes lang (1 byte data + 8 + 20 + 14).
 
