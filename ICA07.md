@@ -1,11 +1,18 @@
 # ICA 07, nettverk og protokoller
 
+## Innhold
+
+* [Wireshark](#wireshark)
 * [UDP](#udp)
   * [Lokal UDP-pakke](#lokal-udp-pakke)
   * [UDP-pakke over nettverk](#udp-pakke-over-nettverk)
   * [Analyse av UDP](#analyse-av-udp)
   * [Størrelse på UDP-pakke](#størrelse-på-udp-pakke)
 * [TCP](#tcp)
+  * [Analyse av TCP](#analyse-av-tcp)
+  * [Størrelse på TCP-pakke](#størrelse-på-tcp-pakke)
+  * [Fragmentering](#fragmentering)
+* [UDP vs. TCP](#tcp-vs-udp)
 
 ## Wireshark
 
@@ -115,3 +122,79 @@ Med dette i betraktning, kan man si at den største UDP-pakken man kan sende ove
 Dette er spesifikt viktig å vite i situasjoner hvor man vil oppnå høy ytelse, for eksempel dersom dataen man vil sende over er 1473 bytes, vil man sende to pakker; en som er 1514 bytes lang (1472 bytes data + 8 + 20 + 14), og en som er 35 bytes lang (1 byte data + 8 + 20 + 14).
 
 ## TCP
+
+
+### Analyse av TCP
+
+I hver TCP-pakke fins MAC header, og IPv4 header. Disse er lik UDP-versjonen, men Protocol-feltet i IPv4-header er satt til `0x06` for å representere TCP, i stedet for `0x11` som er UDP. Det som følger IPv4 er TCP-header med følgende struktur (med eksempeldata fra en SYN-pakke)
+
+```
+[ad 78]             Source port (44408)
+[40 01]             Destination port (16385)
+[b4 00 c1 d9]       Sequence number
+[00 00 00 00]       Acknowledgment number
+// Følgende blir representert i bits
+[1010]              Header length (0b1010 = 10, 10 * 4 = 40)
+[000]               Reserved for future use
+[00000010]          Flags [NS, CWR, ECE, URG, ACK, PSH, RST, SYN, FIN]
+// Følgende blir representert heksadesimalt
+[aa aa]             Window Size value (43690)
+[fe 30]             Checksum
+[00 00]             Urgent pointer
+// Options (har forskjellig betydning alt etter header length)
+  // Maximum segment size
+    [02]            Option kind (maximum segment size)
+    [04]            Option length (4)
+    [ff d7]         Option value (65495)
+  // TCP SACK Permitted Option
+    [04]            Option kind (SACK permitted)
+    [02]            Option length (2)
+  // Timestamps
+    [08]            Option kind (Time stamp option)
+    [0a]            Option length (10)
+    [14 65 2b 9c]   Option value (Timestamp value)
+    [00 00 00 00]   Option value (Timestamp echo reply)
+  // No-Operation
+    [01]            Option kind (No operation)
+  // Window scale
+    [03]            Option kind (Window Scale)
+    [03]            Option length (3)
+    [07]            Option value (shift count, 7)
+```
+
+
+### Størrelse på TCP-pakke
+
+Størrelsen på TCP-pakker er avhengig av Maximum Segment Size-feltet (MSS) i headeren. Dette blir satt under koblingshandshake, og i vårt eksempeltilfelle er 65495 bytes. Dog, dette vil over nettverket, i likhet til UDP, føre til fragmentering på IP-laget, da Ethernet 2's MTU er 1500 bytes.
+
+### Fragmentering
+
+Fragmentering kan også skje på TCP-laget, når MSS er satt til noe lavere. Distinksjonen mellom fragmentering på de to forskjellige lagene er viktig, fordi dersom fragmentering skjer på TCP-laget, vil TCP-protokollen alltid holde styr på hvor mange segmenter har blitt mottatt og sendt (med ACK-pakker). Dersom et segment ikke blir mottatt av serveren, vil klienten prøve på nytt. Dette fører til at alle parter kan være sikre på at alt ble overført ordentlig, noe som ikke skjer på IP-laget.
+
+## UDP vs. TCP
+
+TCP er veldig forskjellig fra UDP i den forstand at TCP kontrollerer om data har blitt mottatt eller ei,
+hvor UDP ikke bryr seg om dataen den sender har kommet frem til destinasjonen.
+
+I en situasjon hvor UDP sender én pakke med data, vil TCP sende 8 pakker. Her er sekvensen:
+
+```
+// 3-stegs koblingshandshake
+SYN                 Klient -> Server (klient venter på kobling med server)
+SYN, ACK            Server -> Klient (server sier ifra at koblingen er godtatt)
+ACK                 Klient -> Server (klient sier ifra at koblingen er godtatt)
+// Her vet klient at server er klar for overføring av data
+PSH, ACK            Klient -> Server (klient sender data til server)
+ACK                 Server -> Klient (server sier ifra at data er mottatt)
+// 3-stegs avslutningshandshake
+FIN, ACK            Klient -> Server (klient vil avslutte koblingen)
+FIN, ACK            Server -> Klient (server godtar avslutningen)
+ACK                 Klient -> Server (klient godtar avslutningen)
+// Dette er egentlig 4 steg, da server ikke avslutter koblingen før den siste ACK-pakken har blitt mottatt
+```
+
+Et spesifikt eksempel på TCP og UDP er i spill som Rocket League (fotball med biler, enkelt sagt), der både TCP og UDP spiller en viktig rolle.
+
+TCP-protokollen brukes til serverkoblinger når en bruker vil søke etter en spillserver hos master-serveren, som får serverinformasjon til spillserver i retur. TCP brukes også inne i spillserveren, for chat-kommunikasjon mellom spillere, samt poenghåndtering (mål og spillerinfo). Der hvor serveren og spillerne må være sikre på at informasjonen er riktig og distribuert, brukes TCP.
+
+UDP spiller en større rolle i selve spillet, da posisjonen på ballen, og hver spiller blir sendt til serveren via UDP, og distribuert tilbake til spillerne. UDP blir også brukt i forbindelse med voice chat. Altså, der hvor høy ytelse trengs, men errorhandling på transportlaget ikke er så viktig, brukes UDP.
