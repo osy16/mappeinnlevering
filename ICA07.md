@@ -1,4 +1,6 @@
-# ICA 07, nettverk og protokoller
+# ICA 07, nettverkslag og protokoller
+
+* Repository: https://github.com/crippling-depression/is105-ica07
 
 ## Innhold
 
@@ -26,6 +28,9 @@ IPv4-addressen.
 Man kan også legge inn et filter for protokoll: `ip.proto == "UDP"`, men
 ettersom at ingen andre forespørsler sendes til den addressen, er det nok med kun
 `ip.addr`-filteret
+
+Wireshark-filteret støtter binære operatører som `&&` (AND) og `||` (OR), for å legge sammen
+filterkrav.
 
 ## UDP
 
