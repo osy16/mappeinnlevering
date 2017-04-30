@@ -219,14 +219,13 @@ Go har allerede god støtte for Transport Layer Security (TLS) i `crypto/tls`, e
 Siden dette er tilfellet, samt at det er generelt høyt anbefalt blant folk innen krypteringssirkler,
 gjør at vi valgte å bruke det i stedet for Diffie-Hellman pluss en annen slags public-key crypto.
 
-TLS er kun støttet over TCP, dog det fins et ekvivalent alternativ for UDP kalt [Datagram Transport Layer Security](https://wiki.wireshark.org/DTLS) (DTLS).
+TLS er kun støttet over TCP, dog det fins et ekvivalent alternativ for UDP kalt [Datagram Transport Layer Security](https://tools.ietf.org/html/rfc4347) (DTLS).
 Go har ingen slags førstepartibibliotek for DTLS, og alle tredjepartibibliotek virker verken fullførte eller særlig til å stole på.
 
 ### Diffie-Hellman
 
 Siden situasjonen med Go og DTLS ikke er noe å forfølge, har vi like godt en mulighet til å implementere Diffie-Hellman nøkkelutveksling over UDP.
-I forbindelse med faktisk kryptering, er valget [NaCl](https://nacl.cr.yp.to/index.html), med `golang.org/x/crypto/nacl/box` for å generere nøkkelpar og
-kryptere/dekryptere meldinger.
+I forbindelse med faktisk kryptering, er valget [NaCl](https://nacl.cr.yp.to/index.html), med `golang.org/x/crypto/nacl/box` for å generere nøkkelpar og kryptere/dekryptere meldinger. Vi lar NaCl ta hånd om mesteparten av konfigurasjonen, i stedet for å prøve å gjøre det riktig selv ("don't roll your own crypto").
 
 Løsningen vår gjøres med følgende 4-stegs prosess over nettverket.
 
