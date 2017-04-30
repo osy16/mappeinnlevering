@@ -13,6 +13,9 @@
   * [Størrelse på TCP-pakke](#størrelse-på-tcp-pakke)
   * [Fragmentering](#fragmentering)
 * [UDP vs. TCP](#udp-vs-tcp)
+* [Kryptering](#kryptering)
+  * [TLS/DTLS](#tls-dtls)
+  * [Diffie-Hellman](#diffie-hellman)
 
 ## Wireshark
 
@@ -51,8 +54,6 @@ Dette er et eksempel på en UDP-pakke sendt over nettverket.
 0030   46 72 20 35 2e 35 20 31 34 3a 34 35 20 46 6c c3
 0040   a5 6b 6c 79 70 61
 ```
-
----
 
 ### Analyse av UDP
 
@@ -121,8 +122,9 @@ Med dette i betraktning, kan man si at den største UDP-pakken man kan sende ove
 
 Dette er spesifikt viktig å vite i situasjoner hvor man vil oppnå høy ytelse, for eksempel dersom dataen man vil sende over er 1473 bytes, vil man sende to pakker; en som er 1514 bytes lang (1472 bytes data + 8 + 20 + 14), og en som er 35 bytes lang (1 byte data + 8 + 20 + 14).
 
-## TCP
+---
 
+## TCP
 
 ### Analyse av TCP
 
@@ -171,6 +173,8 @@ Størrelsen på TCP-pakker er avhengig av Maximum Segment Size-feltet (MSS) i he
 
 Fragmentering kan også skje på TCP-laget, når MSS er satt til noe lavere. Distinksjonen mellom fragmentering på de to forskjellige lagene er viktig, fordi dersom fragmentering skjer på TCP-laget, vil TCP-protokollen alltid holde styr på hvor mange segmenter har blitt mottatt og sendt (med ACK-pakker). Dersom et segment ikke blir mottatt av serveren, vil klienten prøve på nytt. Dette fører til at alle parter kan være sikre på at alt ble overført ordentlig, noe som ikke skjer på IP-laget.
 
+---
+
 ## UDP vs. TCP
 
 TCP er veldig forskjellig fra UDP i den forstand at TCP kontrollerer om data har blitt mottatt eller ei,
@@ -198,3 +202,39 @@ Et spesifikt eksempel på TCP og UDP er i spill som Rocket League (fotball med b
 TCP-protokollen brukes til serverkoblinger når en bruker vil søke etter en spillserver hos master-serveren, som får serverinformasjon til spillserver i retur. TCP brukes også inne i spillserveren, for chat-kommunikasjon mellom spillere, samt poenghåndtering (mål og spillerinfo). Der hvor serveren og spillerne må være sikre på at informasjonen er riktig og distribuert, brukes TCP.
 
 UDP spiller en større rolle i selve spillet, da posisjonen på ballen, og hver spiller blir sendt til serveren via UDP, og distribuert tilbake til spillerne. UDP blir også brukt i forbindelse med voice chat. Altså, der hvor høy ytelse trengs, men errorhandling på transportlaget ikke er så viktig, brukes UDP.
+
+---
+
+## Kryptering
+
+Vi har tatt informasjon fra et dokument kalt [Cryptographic Right Answers](https://gist.github.com/tqbf/be58d2d39690c3b366ad) angående kryptering,
+noe som har ført oss i noen andre retninger enn hva ICA-dokumentet antyder er lurt, spesielt med tanke på TCP.
+
+### TLS/DTLS
+
+Go har allerede god støtte for Transport Layer Security (TLS) i `crypto/tls`, en type kryptering som er vidspredt spesielt i nettverkslesernes rike.
+Siden dette er tilfellet, samt at det er generelt høyt anbefalt blant folk innen krypteringssirkler,
+gjør at vi valgte å bruke det i stedet for Diffie-Hellman pluss en annen slags public-key crypto.
+
+TLS er kun støttet over TCP, dog det fins et ekvivalent alternativ for UDP kalt [Datagram Transport Layer Security](https://wiki.wireshark.org/DTLS) (DTLS).
+Go har ingen slags førstepartibibliotek for DTLS, og alle tredjepartibibliotek virker verken fullførte eller særlig til å stole på.
+
+### Diffie-Hellman
+
+Siden situasjonen med Go og DTLS ikke er noe å forfølge, har vi like godt en mulighet til å implementere Diffie-Hellman nøkkelutveksling over UDP.
+I forbindelse med faktisk kryptering, er valget [NaCl](https://nacl.cr.yp.to/index.html), med `golang.org/x/crypto/nacl/box` for å generere nøkkelpar og
+kryptere/dekryptere meldinger.
+
+Løsningen vår gjøres med følgende 4-stegs prosess over nettverket.
+
+1. Klient sender public key til server
+  * Klient lager sharedKey med server key og sin egen private key
+2. Server sender public key til Klient
+  * Server lager sharedKey med klient key og sin egen private key
+    * sharedKey er nå lik hos begge parter
+3. Klient sender et tilfeldig generert nonce
+  * Klienten krypterer hemmelig melding med nonce og sharedKey
+5. Klient sender kryptert melding
+  * Server bruker nonce og sharedKey for å dekryptere meldingen
+
+Det skal påpekes at UDP er ikke særlig robust til akkurat dette, siden hele prosessen avhenger på at alle pakker mottas, og i riktig rekkefølge.
