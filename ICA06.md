@@ -20,7 +20,7 @@ Marius: Maske
 
 ---
 
-![Tønnes](https://github.com/crippling-depression/mappeinnlevering/blob/master/assets/ica06-tønnes.png)
+![Tønnes](https://github.com/crippling-depression/mappeinnlevering/blob/master/assets/ica06-tonnes.png)
 
 Tønnes: Maske
 
