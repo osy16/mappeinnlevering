@@ -13,7 +13,7 @@ Repository: https://github.com/crippling-depression/is105-ica03
   * [3a](#3a)
   * [3b](#3b)
   * [3c](#3c)
-* [Oppgave 4](#oppgave-3)
+* [Oppgave 4](#oppgave-4)
 
 ---
 
@@ -82,8 +82,6 @@ Lik oppgave 3b, trenger vi å finne ut hvilket tegnsett en tekst er. For å gjø
 
 
 ## Oppgave 4
-Oppgaven er delt opp i to filer, `oppgave4.go`, som inneholder oppgave 4 a, og `server.go` som inneholder oppgave 4 b.
+Oppgave 4a vises som forventet ikke riktig på Windows’ `cmd` eller `powershell`, men fungerer fint i `git-bash`, samt på OS X og Linux, så lenge terminalen bruker en font som har støtte for alle kodepunktene som printes.
 
-Oppgave a vises som forventet ikke riktig på Windows’ `cmd` eller `powershell`, men fungerer fint i `git-bash`, samt på OS X og Linux, så lenge terminalen bruker en font som har støtte for alle kodepunktene som printes.
-
-I oppgave b er det ikke lenger opp til terminalvinduet å printe karakterer, men heller en nettleser. Her kan vi se at alle moderne nettlesere støtter UTF-8, ettersom at klokken (`\u23F0`) vises som forventet.
+I oppgave 4b er det ikke lenger opp til terminalvinduet å printe karakterer, men heller en nettleser. Her kan vi se at alle moderne nettlesere støtter UTF-8, ettersom at klokken (`\u23F0`) vises som forventet.
