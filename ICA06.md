@@ -6,10 +6,13 @@ Brage Sydskogen, Martin Hovet, Tønnes Røren, Marius Kaurin, Kent Daleng
 
 Repo for eksperimenter: https://github.com/crippling-depression/is105-ica06
 
+Det mest relevante av kode ligger i mappen `speech/`.
+
 ## Innhold
 * [Eksperiment 1](#eksperiment-1)
 * [Eksperiment 2](#eksperiment-2)
 * [Eksperiment 3](#eksperiment-3)
+* [Eskperiment 4](#eksperiment-4)
 
 
 ## Eksperiment 1
@@ -60,6 +63,26 @@ Alt dette kan gjøres ved hjelp av maskinlæring, man kan for eksempel trene en 
 
 ## Eksperiment 2
 
+* [Tekst til tale](https://darn.site/text)
 
+`espeakbox` er satt opp på Marius sin server, og blir spurt når en forespørsel
+sendes til Kent's server. På denne måten blir Marius' server aldri direkte vist for klienten.
+
+1. Klient POSTer "hallo" til server
+2. Server sender forespørsel til "skytjeneste"
+3. "Skytjeneste" sender tilbake lydfil
+4. Server sender lydfil til Klient
 
 ## Eksperiment 3
+
+* [Tale til tekst](https://darn.site/recognize)
+
+Ved bruk av [Google Speech](https://cloud.google.com/speech/docs/reference/libraries) kan vi sende lydfiler til deres talegjenkjennelsestjeneste, og få tilbake en string som Google mener mest sannsynlig representerer det som ble sagt.
+
+## Eksperiment 4
+
+* [Tale til tekst til tale](https://darn.site/nextlevel)
+
+En sammensetning av eksperiment 3 og 2.
+1. En lydfil med tale blir sendt til Google som returnerer en tekst
+2. Teksen blir så sendt til espeakbox hos Marius som returnerer en lydfil
