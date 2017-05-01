@@ -80,6 +80,8 @@ Dermed brukes `fileutils.FileToByteslice()` for å lese filen til []byte, og fun
 ### 3c
 Lik oppgave 3b, trenger vi å finne ut hvilket tegnsett en tekst er. For å gjøre dette enklest mulig, hardkodet vi byteverdiene i “treasure/treasure.txt” til en const string som vi skrev til en fil kalt “treasure/encodedtreasure.txt”. Denne kan vi dermed åpne i Atom og finne ut hvilket tegnsett som brukes. Ettersom Atom rapporterer at dette også er Windows 1252, kan vi bruke akkurat samme const string konvertert til []byte, og samme funksjon som i 3b for å konvertere fra Windows 1252 til UTF-8.
 
+I senere tid fant vi ut en måte å laste "treasure/treasure.txt" direkte, uten å måtte hardkode innholdet. Funksjonen for dekoding er lik som før.
+
 
 ## Oppgave 4
 Oppgave 4a vises som forventet ikke riktig på Windows’ `cmd` eller `powershell`, men fungerer fint i `git-bash`, samt på OS X og Linux, så lenge terminalen bruker en font som har støtte for alle kodepunktene som printes.
