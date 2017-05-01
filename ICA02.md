@@ -81,7 +81,7 @@ Denne errorsjekkingen har blitt implementert i sum/sum.go, samt i main_sum.go
 
 ## Oppgave 4
 
-![Sorteringsgraf](https://github.com/crippling-depression/mappeinnlevering/blob/master/sorting-comparison.png)
+![Sorteringsgraf](https://github.com/crippling-depression/mappeinnlevering/blob/master/assets/ica02-sorting-comparison.png)
 
 Vår implementasjon av Bubblesort sjekker om listen er sortert i hver iterasjon, og vil dermed stoppe. I tillegg, vil algoritmen flytte det største elementet til posisjon slutt av listen på første iterasjon, det nest største elementet til posisjon slutt-1. Derfor setter vi at lengden av iterasjonen blir 1 mindre for hver iterasjon.
 Man kan likevel se at våre forsøk på optimisering har liten effekt, her representert i en graf med y-aksen i logaritmisk skala for lesbarhet. Det er uansett åpenbart at Bubblesort er nærmest ubrukelig i forhold til bedre algoritmer som Quicksort.

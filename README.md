@@ -13,7 +13,7 @@ Det som følger er en oversikt over alle innleveringene, med link til repository
 
 ## [ICA03](https://github.com/crippling-depression/is105-ica03)
   * [Repository](https://github.com/crippling-depression/is105-ica03)
-  * Dokumentasjon
+  * [Dokumentasjon](https://github.com/crippling-depression/mappeinnlevering/blob/master/ICA03.md)
 
 ## [ICA04](https://github.com/crippling-depression/is105-ica04)
   * [Repository](https://github.com/crippling-depression/is105-ica04)
