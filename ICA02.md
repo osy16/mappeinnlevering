@@ -4,6 +4,8 @@
 
 Brage Sydskogen, Martin Hovet, Tønnes Røren, Marius Kaurin, Kent Daleng, Stian Simonsen
 
+Repository: https://github.com/chinatsu/is105-ica02
+
 ## Innhold
 
 * [Oppgave 1](#oppgave-1)
@@ -11,6 +13,8 @@ Brage Sydskogen, Martin Hovet, Tønnes Røren, Marius Kaurin, Kent Daleng, Stian
 * [Oppgave 3](#oppgave-3)
 * [Oppgave 4](#oppgave-4)
 * [Oppgave 5](#oppgave-5)
+
+---
 
 ## Oppgave 1:
 

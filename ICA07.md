@@ -19,6 +19,8 @@
   * [TLS/DTLS](#tlsdtls)
   * [Diffie-Hellman](#diffie-hellman)
 
+---
+
 ## Wireshark
 
 Eksempel på Wireshark-filter: `ip.host == 10.228.41.168`
